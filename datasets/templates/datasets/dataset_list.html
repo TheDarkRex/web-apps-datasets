@@ -1,0 +1,44 @@
+{% extends 'datasets/base.html' %}
+
+{% block content %}
+<h2 class="h5 mb-3">Dostępne bazy danych</h2>
+
+{% include 'datasets/_search_form.html' %}
+
+<div class="row">
+    {% for dataset in datasets %}
+        <div class="col-md-6 col-lg-4 mb-4">
+            <div class="card h-100 shadow-sm">
+                <div class="card-body">
+                    <h5 class="card-title">{{ dataset.name }}</h5>
+                    <h6 class="card-subtitle mb-3 text-muted">Autor: {{ dataset.author }}</h6>
+                    
+                    <p class="card-text mb-1">
+                        <strong>Tematyka:</strong> {{ dataset.topic }}
+                    </p>
+                    <p class="card-text mb-1">
+                        <strong>Wielkość:</strong> {{ dataset.get_size_class_display }}
+                    </p>
+                    <p class="card-text mb-1">
+                        <strong>Skomplikowanie (ilość tabel):</strong> {{ dataset.table_count }}
+                    </p>
+                    <p class="card-text text-muted small mt-3">
+                        Dodano: {{ dataset.created_at|date:"d.m.Y, H:i" }}
+                    </p>
+                </div>
+                <div class="card-footer bg-white border-top-0 text-end">
+                    <a href="{% url 'datasets:detail' dataset.pk %}" class="btn btn-sm btn-primary">
+                        Szczegóły
+                    </a>
+                </div>
+            </div>
+        </div>
+    {% empty %}
+        <div class="col-12">
+            <div class="alert alert-warning" role="alert">
+                Brak baz danych w repozytorium. Zaloguj się, aby dodać pierwszą!
+            </div>
+        </div>
+    {% endfor %}
+</div>
+{% endblock %}

@@ -14,7 +14,7 @@ import os
 
 from dotenv import load_dotenv
 from pathlib import Path
-from flask.cli import load_dotenv
+from dotenv import load_dotenv
 
 # loads env variables
 load_dotenv()
@@ -123,3 +123,12 @@ USE_TZ = True
 # https://docs.djangoproject.com/en/6.0/howto/static-files/
 
 STATIC_URL = 'static/'
+
+MEDIA_ROOT = BASE_DIR / 'media'
+
+MEDIA_URL = '/media/'
+
+LOGIN_REDIRECT_URL = 'datasets:list'
+LOGOUT_REDIRECT_URL = 'datasets:list'
+
+EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'

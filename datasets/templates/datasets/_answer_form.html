@@ -1,0 +1,11 @@
+{% if user.is_authenticated %}
+    <div class="ms-4 mt-2">
+        <form method="post" action="{% url 'datasets:add_answer' query.pk %}">
+            {% csrf_token %}
+            <div class="d-flex gap-2">
+                {{ answer_form.content }}
+                <button type="submit" class="btn btn-outline-primary btn-sm align-self-start">Odpowiedz</button>
+            </div>
+        </form>
+    </div>
+{% endif %}

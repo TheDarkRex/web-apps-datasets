@@ -1,0 +1,40 @@
+{% extends 'datasets/base.html' %}
+
+{% block content %}
+<div class="row justify-content-center mt-5">
+    <div class="col-md-6 col-lg-4">
+        <div class="card shadow-sm">
+            <div class="card-body p-4">
+                <h2 class="h4 text-center mb-4">Logowanie</h2>
+                
+                {% if form.errors %}
+                    <div class="alert alert-danger small">
+                        Niepoprawna nazwa użytkownika lub hasło. Spróbuj ponownie.
+                    </div>
+                {% endif %}
+
+                <form method="post">
+                    {% csrf_token %}
+                    
+                    <div class="mb-3">
+                        <label for="id_username" class="form-label text-muted small">Nazwa użytkownika</label>
+                        <input type="text" name="username" class="form-control" id="id_username" required autofocus>
+                    </div>
+                    
+                    <div class="mb-4">
+                        <label for="id_password" class="form-label text-muted small">Hasło</label>
+                        <input type="password" name="password" class="form-control" id="id_password" required>
+                    </div>
+                    
+                    <button type="submit" class="btn btn-primary w-100">Zaloguj się</button>
+                </form>
+
+                <div class="mt-3 text-center small d-flex flex-column gap-2">
+                    <a href="{% url 'password_reset' %}" class="text-decoration-none">Zapomniałeś hasła?</a>
+                    <span>Nie masz konta? <a href="{% url 'datasets:signup' %}" class="fw-bold">Zarejestruj się</a></span>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

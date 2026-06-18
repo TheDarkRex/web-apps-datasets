@@ -1,0 +1,25 @@
+<form method="GET" action="{% url 'datasets:list' %}" class="card shadow-sm mb-4 border-0 bg-white">
+    <div class="card-body row g-2 align-items-end">
+
+        <div class="col-md-6">
+            <label for="searchQuery" class="form-label text-muted small mb-1">Szukaj w nazwie lub autorze</label>
+            <input type="text" class="form-control" id="searchQuery" name="q" value="{{ current_query }}" placeholder="Wpisz słowo kluczowe...">
+        </div>
+
+        <div class="col-md-4">
+            <label for="sizeFilter" class="form-label text-muted small mb-1">Klasa wielkości</label>
+            <select class="form-select" id="sizeFilter" name="size">
+                <option value="">Wszystkie rozmiary</option>
+                {% for code, label in size_choices %}
+                    <option value="{{ code }}" {% if current_size == code %}selected{% endif %}>{{ label }}</option>
+                {% endfor %}
+            </select>
+        </div>
+
+        <div class="col-md-2 d-flex gap-2">
+            <button type="submit" class="btn btn-primary w-100">Filtruj</button>
+            <a href="{% url 'datasets:list' %}" class="btn btn-outline-secondary">Czyść</a>
+        </div>
+
+    </div>
+</form>

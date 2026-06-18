@@ -1,0 +1,24 @@
+<div class="card shadow-sm">
+    <div class="card-header bg-white">
+        <h5 class="h6 mb-0 mt-1">Schemat bazy danych</h5>
+    </div>
+    <div class="card-body">
+        {% if dataset.schema %}
+            {% if dataset.schema.illustration %}
+                <div class="mb-3">
+                    <img src="{{ dataset.schema.illustration.url }}" alt="Schemat {{ dataset.name }}" class="img-fluid rounded border">
+                </div>
+            {% endif %}
+
+            {% if dataset.schema.ddl_file %}
+                <div class="d-grid">
+                    <a href="{{ dataset.schema.ddl_file.url }}" class="btn btn-outline-primary btn-sm" download>
+                        Pobierz skrypt DDL (.sql)
+                    </a>
+                </div>
+            {% endif %}
+        {% else %}
+            <p class="text-muted small mb-0">Właściciel nie udostępnił schematu dla tego zbioru.</p>
+        {% endif %}
+    </div>
+</div>

@@ -1,0 +1,49 @@
+<div class="card shadow-sm mb-4">
+    <div class="card-header bg-white">
+        <h5 class="h6 mb-0 mt-1">Zapytania i odpowiedzi</h5>
+    </div>
+    <div class="card-body">
+        {% if dataset.queries.all %}
+            {% for query in dataset.queries.all %}
+                <div class="border-bottom mb-3 pb-3">
+
+                    <div class="d-flex justify-content-between mb-2 align-items-center">
+                        <div>
+                            <strong>{{ query.author.username }}</strong>
+                            <span class="text-muted small ms-2">{{ query.created_at|date:"d.m.Y H:i" }}</span>
+                        </div>
+                        {% if request.user == query.author %}
+                            <a href="{% url 'datasets:delete_query' query.pk %}" class="btn btn-sm btn-outline-danger py-0 px-2" title="Usuń zapytanie">Usuń</a>
+                        {% endif %}
+                    </div>
+                    <p class="mb-2">{{ query.content }}</p>
+
+                    {% if query.answers.all %}
+                        <div class="ms-4 mt-2 ps-3 border-start border-2 mb-3">
+                            {% for answer in query.answers.all %}
+
+                                <div class="d-flex justify-content-between mb-1 align-items-center">
+                                    <div>
+                                        <span class="text-primary small fw-bold">{{ answer.author.username }}</span>
+                                        <span class="text-muted small ms-2">{{ answer.created_at|date:"d.m.Y H:i" }}</span>
+                                    </div>
+                                    {% if request.user == answer.author %}
+                                        <a href="{% url 'datasets:delete_answer' answer.pk %}" class="text-danger text-decoration-none small" title="Usuń odpowiedź">&times; Usuń</a>
+                                    {% endif %}
+                                </div>
+                                <p class="small mb-2">{{ answer.content }}</p>
+
+                            {% endfor %}
+                        </div>
+                    {% endif %}
+
+                    {% include 'datasets/_answer_form.html' %}
+                </div>
+            {% endfor %}
+        {% else %}
+            <p class="text-muted mb-3">Brak zapytań dla tej bazy danych.</p>
+        {% endif %}
+
+        {% include 'datasets/_query_form.html' %}
+    </div>
+</div>

@@ -1,0 +1,14 @@
+{% if user.is_authenticated %}
+    <div class="mt-4 pt-3 border-top">
+        <h6 class="mb-2">Dodaj nowe zapytanie</h6>
+        <form method="post" action="{% url 'datasets:add_query' dataset.pk %}">
+            {% csrf_token %}
+            {{ query_form.content }}
+            <button type="submit" class="btn btn-primary btn-sm mt-2">Wyślij zapytanie</button>
+        </form>
+    </div>
+{% else %}
+    <div class="alert alert-info small mt-4 mb-0">
+        <a href="{% url 'login' %}">Zaloguj się</a>, aby dodać zapytanie lub odpowiedź.
+    </div>
+{% endif %}

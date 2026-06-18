@@ -1,0 +1,18 @@
+{% extends 'datasets/base.html' %}
+
+{% block content %}
+<div class="mb-4">
+    <a href="{% url 'datasets:list' %}" class="btn btn-outline-secondary btn-sm">&larr; Wróć do listy</a>
+</div>
+
+<div class="row">
+    <div class="col-lg-8">
+        {% include 'datasets/_dataset_info.html' %}
+        {% include 'datasets/_dataset_qa.html' %}
+    </div>
+
+    <div class="col-lg-4">
+        {% include 'datasets/_dataset_schema.html' %}
+    </div>
+</div>
+{% endblock %}

@@ -1,0 +1,23 @@
+{% extends 'datasets/base.html' %}
+{% block content %}
+<div class="row justify-content-center">
+    <div class="col-md-6">
+        <div class="card shadow-sm border-danger">
+            <div class="card-body p-4 text-center">
+                <h2 class="h4 mb-3 text-danger">Usuń zapytanie</h2>
+                <p>Czy na pewno chcesz trwale usunąć swoje zapytanie:</p>
+                <blockquote class="blockquote border bg-light p-3 small text-start">"{{ object.content }}"</blockquote>
+                <p class="text-muted small mt-3">Ta operacja usunie również wszystkie odpowiedzi przypisane do tego zapytania.</p>
+                
+                <form method="post" class="mt-4">
+                    {% csrf_token %}
+                    <div class="d-flex justify-content-center gap-3">
+                        <a href="{% url 'datasets:detail' object.dataset.pk %}" class="btn btn-outline-secondary">Anuluj</a>
+                        <button type="submit" class="btn btn-danger">Tak, usuń zapytanie</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

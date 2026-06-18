@@ -1,0 +1,34 @@
+<div class="card shadow-sm mb-4">
+    <div class="card-body">
+        <div class="d-flex justify-content-between align-items-start mb-2">
+            <h2 class="card-title h3 mb-0">{{ dataset.name }}</h2>
+
+            {% if request.user == dataset.owner %}
+            <div class="d-flex gap-2">
+                <a href="{% url 'datasets:update' dataset.pk %}" class="btn btn-warning btn-sm">Edytuj zbiór</a>
+                <a href="{% url 'datasets:delete' dataset.pk %}" class="btn btn-danger btn-sm">Usuń</a>
+            </div>
+            {% endif %}
+        </div>
+
+        <h6 class="card-subtitle mb-4 text-muted">Autorzy: {{ dataset.author }}</h6>
+
+        <div class="mb-4 d-flex gap-2 flex-wrap">
+            <span class="badge bg-primary">Tematyka: {{ dataset.topic }}</span>
+            <span class="badge bg-secondary">Rozmiar: {{ dataset.get_size_class_display }}</span>
+            <span class="badge bg-info text-dark">Liczba tabel: {{ dataset.table_count }}</span>
+        </div>
+
+        <h5 class="h6 border-bottom pb-2">Opis</h5>
+        <p class="card-text">{{ dataset.description|linebreaks }}</p>
+
+        <div class="mt-4">
+            <a href="{{ dataset.link }}" target="_blank" rel="noopener noreferrer" class="btn btn-success">
+                Przejdź do danych źródłowych
+            </a>
+        </div>
+    </div>
+    <div class="card-footer bg-light text-muted small">
+        Dodano: {{ dataset.created_at|date:"d.m.Y, H:i" }} przez {{ dataset.owner.username }}
+    </div>
+</div>
