@@ -1,12 +1,12 @@
 <div class="card shadow-sm">
-    <div class="card-header bg-white">
+    <div class="card-header">
         <h5 class="h6 mb-0 mt-1">Schemat bazy danych</h5>
     </div>
     <div class="card-body">
         {% if dataset.schema %}
-            {% if dataset.schema.illustration %}
+            {% if dataset.schema.image %}
                 <div class="mb-3">
-                    <img src="{{ dataset.schema.illustration.url }}" alt="Schemat {{ dataset.name }}" class="img-fluid rounded border">
+                    <img src="{{ dataset.schema.image.url }}" alt="Schemat {{ dataset.name }}" class="img-fluid rounded border">
                 </div>
             {% endif %}
 

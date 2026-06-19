@@ -1,8 +1,14 @@
-<form method="GET" action="{% url 'datasets:list' %}" class="card shadow-sm mb-4 border-0 bg-white">
+<form method="GET" action="{% url 'datasets:list' %}" class="card shadow-sm mb-4 border-0">
     <div class="card-body row g-2 align-items-end">
 
         <div class="col-md-6">
-            <label for="searchQuery" class="form-label text-muted small mb-1">Szukaj w nazwie lub autorze</label>
+            <label for="searchQuery" class="form-label text-muted small mb-1">
+                {% if user.is_authenticated %}
+                    Szukaj w nazwie, autorze, opisie oraz w Q&A
+                {% else %}
+                    Szukaj w nazwie lub autorze
+                {% endif %}
+            </label>
             <input type="text" class="form-control" id="searchQuery" name="q" value="{{ current_query }}" placeholder="Wpisz słowo kluczowe...">
         </div>
 
@@ -13,6 +19,15 @@
                 {% for code, label in size_choices %}
                     <option value="{{ code }}" {% if current_size == code %}selected{% endif %}>{{ label }}</option>
                 {% endfor %}
+            </select>
+        </div>
+
+        <div class="col-md-3">
+            <label for="sortOrder" class="form-label text-muted small mb-1">Sortowanie</label>
+            <select class="form-select" id="sortOrder" name="sort">
+                <option value="-created_at" {% if request.GET.sort == "-created_at" %}selected{% endif %}>Najnowsze</option>
+                <option value="name" {% if request.GET.sort == "name" %}selected{% endif %}>Nazwa (A-Z)</option>
+                <option value="-name" {% if request.GET.sort == "-name" %}selected{% endif %}>Nazwa (Z-A)</option>
             </select>
         </div>
 

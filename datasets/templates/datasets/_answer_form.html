@@ -1,4 +1,4 @@
-{% if user.is_authenticated %}
+{% if request.user == dataset.owner %}
     <div class="ms-4 mt-2">
         <form method="post" action="{% url 'datasets:add_answer' query.pk %}">
             {% csrf_token %}

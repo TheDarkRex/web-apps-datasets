@@ -1,5 +1,7 @@
 from django import forms
-from .models import Dataset, Query, Answer
+from .models import Dataset, Query, Answer, DatasetSchema
+from django.contrib.auth.forms import UserCreationForm
+from django.contrib.auth.models import User
 
 
 class DatasetForm(forms.ModelForm):
@@ -42,3 +44,28 @@ class AnswerForm(forms.ModelForm):
             }),
         }
         labels = {'content': ''}
+
+class CustomUserCreationForm(UserCreationForm):
+    email = forms.EmailField(required=True, label="Adres e-mail", help_text="Wymagany do resetowania hasła.")
+
+    class Meta(UserCreationForm.Meta):
+        model = User
+        fields = ('username', 'email')
+
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        for field_name, field in self.fields.items():
+            field.widget.attrs['class'] = 'form-control'
+
+class SchemaForm(forms.ModelForm):
+    class Meta:
+        model = DatasetSchema
+        fields = ['image', 'ddl_file']
+        widgets = {
+            'image': forms.FileInput(attrs={'class': 'form-control'}),
+            'ddl_file': forms.FileInput(attrs={'class': 'form-control'}),
+        }
+        labels = {
+            'image': 'Ilustracja schematu (np. diagram ERD)',
+            'ddl_file': 'Skrypt DDL (.sql)'
+        }

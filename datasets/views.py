@@ -1,11 +1,11 @@
 from django.views.generic import ListView, DetailView, CreateView,  UpdateView, DeleteView
 from django.contrib.auth.mixins import LoginRequiredMixin, UserPassesTestMixin
-from django.contrib.auth.forms import UserCreationForm
 from django.urls import reverse_lazy, reverse
-from .models import Dataset, Query, Answer
-from .forms import DatasetForm, QueryForm, AnswerForm
+from .models import Dataset, Query, Answer, DatasetSchema
+from .forms import DatasetForm, QueryForm, AnswerForm, CustomUserCreationForm, SchemaForm
 from django.db.models import Q
-from django.shortcuts import get_object_or_404, redirect
+from django.shortcuts import get_object_or_404
+from django.db import transaction
 
 
 class DatasetListView(ListView):
@@ -14,15 +14,28 @@ class DatasetListView(ListView):
     context_object_name = 'datasets'
 
     def get_queryset(self):
-        queryset = Dataset.objects.all().order_by('-created_at')
+        sort_param = self.request.GET.get('sort', '-created_at')
+
+        if sort_param not in ['name', '-name', '-created_at']:
+            sort_param = '-created_at'
+
+        queryset = Dataset.objects.all().order_by(sort_param)
 
         query = self.request.GET.get('q')
         size_filter = self.request.GET.get('size')
 
         if query:
-            queryset = queryset.filter(
-                Q(name__icontains=query) | Q(author__icontains=query)
-            )
+            search_conditions = Q(name__icontains=query) | Q(author__icontains=query)
+
+            if self.request.user.is_authenticated:
+                advanced_conditions = (
+                    Q(description__icontains=query) |
+                    Q(queries__content__icontains=query) |
+                    Q(queries__answers__content__icontains=query)
+                )
+                search_conditions = search_conditions | advanced_conditions
+
+            queryset = queryset.filter(search_conditions).distinct()
 
         if size_filter:
             queryset = queryset.filter(size_class=size_filter)
@@ -70,6 +83,12 @@ class DatasetUpdateView(LoginRequiredMixin, UserPassesTestMixin, UpdateView):
     def get_success_url(self):
         return reverse_lazy('datasets:detail', kwargs={'pk': self.object.pk})
 
+    @transaction.atomic
+    def post(self, request, *args, **kwargs):
+        Dataset.objects.select_for_update().get(pk=self.kwargs['pk'])
+
+        return super().post(request, *args, **kwargs)
+
 
 class DatasetDeleteView(LoginRequiredMixin, UserPassesTestMixin, DeleteView):
     model = Dataset
@@ -108,7 +127,7 @@ class AnswerCreateView(LoginRequiredMixin, CreateView):
         return reverse('datasets:detail', kwargs={'pk': self.object.query.dataset.pk})
 
 class SignUpView(CreateView):
-    form_class = UserCreationForm
+    form_class = CustomUserCreationForm
     template_name = 'registration/signup.html'
     success_url = reverse_lazy('login')
 
@@ -132,3 +151,20 @@ class AnswerDeleteView(LoginRequiredMixin, UserPassesTestMixin, DeleteView):
 
     def get_success_url(self):
         return reverse_lazy('datasets:detail', kwargs={'pk': self.object.query.dataset.pk})
+
+class SchemaUpdateView(LoginRequiredMixin, UserPassesTestMixin, UpdateView):
+    model = DatasetSchema
+    form_class = SchemaForm
+    template_name = 'datasets/schema_form.html'
+
+    def test_func(self):
+        dataset = get_object_or_404(Dataset, pk=self.kwargs['dataset_pk'])
+        return dataset.owner == self.request.user
+
+    def get_object(self, queryset=None):
+        dataset = get_object_or_404(Dataset, pk=self.kwargs['dataset_pk'])
+        schema, created = DatasetSchema.objects.get_or_create(dataset=dataset)
+        return schema
+
+    def get_success_url(self):
+        return reverse_lazy('datasets:detail', kwargs={'pk': self.kwargs['dataset_pk']})

@@ -1,0 +1,52 @@
+$bg-dark: #080808;
+$card-bg: #121212;
+$card-header-bg: #0a0a0a;
+$border-color: #222222;
+$text-muted: #888888;
+$primary-blue: #0d6efd;
+$primary-blue-hover: #3b82f6;
+$input-bg: #1a1a1a;
+$input-focus-bg: #222222;
+
+body {
+    background-color: $bg-dark !important;
+}
+
+.card, .modal-content {
+    background-color: $card-bg !important;
+    border-color: $border-color !important;
+}
+
+.card-header, .card-footer {
+    background-color: $card-header-bg !important;
+    border-color: $border-color !important;
+}
+
+.border-bottom, .border-top, .border-start, .border-end, .border {
+    border-color: $border-color !important;
+}
+
+.text-muted {
+    color: $text-muted !important;
+}
+
+.btn-primary {
+    background-color: $primary-blue;
+    border-color: $primary-blue;
+}
+
+.text-primary {
+    color: $primary-blue-hover !important;
+}
+
+.form-control, .form-select {
+    background-color: $input-bg !important;
+    border-color: lighten($border-color, 5%) !important;
+    color: #ffffff !important;
+
+    &:focus {
+        background-color: $input-focus-bg !important;
+        border-color: $primary-blue !important;
+        box-shadow: 0 0 0 0.25rem rgba($primary-blue, 0.25) !important;
+    }
+}

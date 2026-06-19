@@ -14,4 +14,5 @@ urlpatterns = [
     path('<int:dataset_pk>/query/', views.QueryCreateView.as_view(), name='add_query'),
     path('query/<int:pk>/delete/', views.QueryDeleteView.as_view(), name='delete_query'),
     path('answer/<int:pk>/delete/', views.AnswerDeleteView.as_view(), name='delete_answer'),
+    path('<int:dataset_pk>/schemat/', views.SchemaUpdateView.as_view(), name='schema_update'),
 ]
